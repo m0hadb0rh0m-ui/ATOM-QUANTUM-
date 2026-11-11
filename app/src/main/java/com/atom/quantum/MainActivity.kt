@@ -1,6 +1,7 @@
 package com.atom.quantum
 
 import android.app.Activity
+import android.content.Intent
 import android.app.AlertDialog
 import android.os.Bundle
 import android.graphics.Color
@@ -60,6 +61,11 @@ class MainActivity : Activity() {
         val settings = Button(this).apply { text = "⚙️"; setOnClickListener { showSettings() } }
         header.addView(settings)
         root.addView(header)
+        val fullStudio = Button(this).apply {
+            text = "🌌 فتح الاستوديو الكامل (صور • فيديو • 3D)"
+            setOnClickListener { startActivity(Intent(this@MainActivity, StudioActivity::class.java)) }
+        }
+        root.addView(fullStudio)
         modelPicker = Spinner(this)
         val labels = models.keys.toList()
         modelPicker.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, labels)
