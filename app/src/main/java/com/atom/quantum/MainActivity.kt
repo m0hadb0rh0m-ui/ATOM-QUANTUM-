@@ -66,6 +66,11 @@ class MainActivity : Activity() {
             setOnClickListener { startActivity(Intent(this@MainActivity, StudioActivity::class.java)) }
         }
         root.addView(fullStudio)
+        val cloudChat = Button(this).apply {
+            text = "☁️ محادثة سحابية عبر الإنترنت"
+            setOnClickListener { startActivity(Intent(this@MainActivity, CloudChatActivity::class.java)) }
+        }
+        root.addView(cloudChat)
         modelPicker = Spinner(this)
         val labels = models.keys.toList()
         modelPicker.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, labels)
