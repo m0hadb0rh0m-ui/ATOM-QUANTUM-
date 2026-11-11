@@ -1,4 +1,5 @@
 name: Build ATOM QUANTUM Android APK
+# Build triggered after Kotlin source was added
 on:
   workflow_dispatch:
   push:
