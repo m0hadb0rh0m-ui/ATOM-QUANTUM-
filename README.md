@@ -29,3 +29,11 @@ Install other Python packages required by the chosen media pipelines separately 
 On the Android device, tap **🌌 فتح الاستوديو الكامل** and enter `http://SERVER_LAN_IP:8501`, replacing `SERVER_LAN_IP` with the server's reachable IP. Both devices should be on the same network. If using a public endpoint, configure HTTPS, authentication and access controls; the original app does not implement secure multi-user authentication. **Do not expose the Streamlit server or Ollama endpoint directly to the public internet.**
 
 The native chat screen uses a **separate Ollama URL**, configured from the gear icon, while the full studio uses the Streamlit URL. The two screens do not share conversation databases. Image, video and 3D generation require the original backend's corresponding dependencies, model weights and compatible compute resources; the WebView itself does not perform generation.
+
+## Internet-only cloud chat
+
+Tap **☁️ محادثة سحابية عبر الإنترنت** to use a hosted OpenAI-compatible chat-completions API without Ollama on your laptop. In the cloud screen settings, enter a full HTTPS endpoint (for example `https://YOUR_PROVIDER/v1/chat/completions`), the provider's model ID and, if required, an API key. No endpoint or paid provider is bundled. The original local Ollama screen is retained for compatibility.
+
+**Security:** The cloud chat API key is stored in Android app preferences on the device (not encrypted with Android Keystore). Prefer a secured proxy that authenticates users and keeps the upstream provider key server-side for production. Never commit API keys into GitHub. Cloud chat sends conversation content to the selected API provider. HTTPS is mandatory for the cloud chat endpoint.
+
+The full studio button requires a separately hosted Streamlit app and GPU/media backends. The app does not automatically provision or host those services.
