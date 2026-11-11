@@ -6,6 +6,7 @@ import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.os.Bundle
@@ -27,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -307,6 +309,8 @@ private fun MessageBubble(role: String, markdown: String, ar: Boolean,
                           onCopy: () -> Unit, onSpeak: () -> Unit, onShare: () -> Unit) {
     val user = role == "user"
     val context = LocalContext.current
+    val foreground = if (user) MaterialTheme.colorScheme.onPrimaryContainer.toArgb()
+                     else MaterialTheme.colorScheme.onSurfaceVariant.toArgb()
     val markwon = remember(context) {
         Markwon.builder(context).usePlugin(TablePlugin.create(context)).build()
     }
@@ -329,10 +333,10 @@ private fun MessageBubble(role: String, markdown: String, ar: Boolean,
                     TextView(it).apply {
                         setTextIsSelectable(true)
                         setPadding(24, 20, 24, 20)
-                        setTextColor(android.graphics.Color.rgb(35, 35, 35))
+                        setTextColor(foreground)
                         textSize = 16f
                     }
-                }, update = { markwon.setMarkdown(it, markdown) },
+                }, update = { it.setTextColor(foreground); markwon.setMarkdown(it, markdown) },
                     modifier = Modifier.fillMaxWidth())
             }
         }
