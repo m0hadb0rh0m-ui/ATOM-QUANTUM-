@@ -46,4 +46,4 @@ Users of the APK never enter a Gemini/OpenAI API key or an Ollama address. The o
 
 ## Build
 Android AGP 8.7.3, Kotlin 2.0.21, Compose compiler plugin 2.0.21, Gradle 8.9, JDK 17, compileSdk 35.
-The CI config uses Gradle 8.9 from setup-gradle. A checked-in Gradle Wrapper is still needed for fully offline reproducibility.
+A checked-in Gradle Wrapper and Gradle 8.9 distribution URL are present; CI uses ./gradlew. Gradle dependencies still require downloads on a fresh build.
