@@ -56,6 +56,9 @@ interface AtomDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveMessage(message: MessageEntity)
 
+    @Query("DELETE FROM messages WHERE id = :id")
+    suspend fun deleteMessage(id: String)
+
     @Query("UPDATE messages SET content = :text WHERE id = :id")
     suspend fun updateMessage(id: String, text: String)
 
