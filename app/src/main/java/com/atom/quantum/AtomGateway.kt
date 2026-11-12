@@ -25,6 +25,20 @@ class AtomGateway {
 
     fun stop() { call?.cancel() }
 
+    suspend fun checkHealth(): String = withContext(Dispatchers.IO) {
+        val base = BuildConfig.API_BASE_URL.trim().trimEnd('/')
+        if (!base.startsWith("https://")) return@withContext "unconfigured"
+        val request = Request.Builder().url(base + "/health").get().build()
+        try {
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) return@withContext "offline"
+                val body = response.body?.string() ?: return@withContext "offline"
+                if (JSONObject(body).optString("status") == "configured") "gateway" else "unconfigured"
+            }
+        } catch (_: IOException) { "offline" }
+        catch (_: Exception) { "offline" }
+    }
+
     suspend fun stream(history: List<MessageEntity>, mode: String, onDelta: (String) -> Unit) {
         withContext(Dispatchers.IO) {
             val base = BuildConfig.API_BASE_URL.trim().trimEnd('/')
