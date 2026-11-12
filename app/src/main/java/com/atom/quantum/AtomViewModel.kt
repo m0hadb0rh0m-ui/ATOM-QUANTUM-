@@ -37,11 +37,24 @@ class AtomViewModel(application: Application) : AndroidViewModel(application) {
     val theme = MutableStateFlow(prefs.getString("theme", "system") ?: "system")
     val language = MutableStateFlow(prefs.getString("language", "system") ?: "system")
     val mode = MutableStateFlow(prefs.getString("mode", "fast") ?: "fast")
+    val serviceState = MutableStateFlow(if (BuildConfig.API_BASE_URL.isBlank()) "unconfigured" else "checking")
 
     init {
         viewModelScope.launch {
             selectedChat.value = dao.mostRecentId()
             if (selectedChat.value == null) createChat()
+        }
+        checkService()
+    }
+
+    fun checkService() {
+        if (BuildConfig.API_BASE_URL.isBlank()) {
+            serviceState.value = "unconfigured"
+            return
+        }
+        serviceState.value = "checking"
+        viewModelScope.launch {
+            serviceState.value = try { gateway.checkHealth() } catch (_: Exception) { "offline" }
         }
     }
 
@@ -114,7 +127,7 @@ class AtomViewModel(application: Application) : AndroidViewModel(application) {
         val text = input.trim()
         if (text.isEmpty() || streaming.value) return false
         if (!BuildConfig.API_BASE_URL.startsWith("https://")) {
-            error.value = "Cloud service is not deployed. Set ATOM_BACKEND_URL in GitHub Actions."
+            error.value = if (language.value == "en") "The AI service is not enabled by its operator yet." else "خدمة الذكاء الاصطناعي غير مفعلة حاليًا. لم يتم إعداد الخادم."
             return false
         }
         val chatId = selectedChat.value ?: return false
@@ -141,7 +154,7 @@ class AtomViewModel(application: Application) : AndroidViewModel(application) {
                 throw CancellationException()
             } catch (err: Exception) {
                 if (result.isNotEmpty()) dao.updateMessage(answerId, result.toString())
-                else dao.updateMessage(answerId, "")
+                else dao.deleteMessage(answerId)
                 error.value = err.message ?: "Request failed"
             } finally {
                 streaming.value = false
