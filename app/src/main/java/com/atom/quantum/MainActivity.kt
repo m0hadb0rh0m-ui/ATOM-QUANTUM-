@@ -317,7 +317,7 @@ private fun AtomApp(vm: AtomViewModel, ar: Boolean) {
                     },
                     actions = {
                         IconButton(onClick = { vm.newChat() }) {
-                            Icon(Icons.Outlined.EditSquare, contentDescription =
+                            Icon(Icons.Outlined.Edit, contentDescription =
                                 if (ar) "محادثة جديدة" else "New chat")
                         }
                         IconButton(onClick = { settings = true }) {
@@ -556,7 +556,7 @@ private fun Composer(value: String, onValue: (String) -> Unit,
                 FilledIconButton(onClick = if (running) onStop else onSend,
                     enabled = running || value.isNotBlank(),
                     modifier = Modifier.size(48.dp), shape = RoundedCornerShape(16.dp)) {
-                    Icon(if (running) Icons.Default.Stop else Icons.AutoMirrored.Filled.Send,
+                    Icon(if (running) Icons.Default.Stop else Icons.Default.Send,
                         contentDescription = if (running) "Stop" else "Send")
                 }
             }
@@ -654,7 +654,7 @@ private fun AtomSettings(vm: AtomViewModel, ar: Boolean,
     Scaffold(containerColor = MaterialTheme.colorScheme.background,
         topBar = { TopAppBar(title = { Text(if (ar) "الإعدادات" else "Settings") },
             navigationIcon = { IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack,
+                Icon(Icons.Default.ArrowBack,
                     contentDescription = if (ar) "رجوع" else "Back")
             } }) }
     ) { padding ->
